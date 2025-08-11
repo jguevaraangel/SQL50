@@ -1,2 +1,2 @@
 # SQL50
-This repository contains my personal solutions to the SQL50 LeetCode problems.
+This repository contains my solutions to "SQL 50" LeetCode compilation.
