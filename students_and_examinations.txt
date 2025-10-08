@@ -1,0 +1,33 @@
+Table: Students
+
++---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| student_id    | int     |
+| student_name  | varchar |
++---------------+---------+
+student_id is the primary key (column with unique values) for this table.
+Each row of this table contains the ID and the name of one student in the school.
+
+ 
+
+Table: Subjects
+
++--------------+---------+
+| Column Name  | Type    |
++--------------+---------+
+| subject_name | varchar |
++--------------+---------+
+subject_name is the primary key (column with unique values) for this table.
+Each row of this table contains the name of one subject in the school.
+
+Query:
+
+SELECT a.student_id, a.student_name, b.subject_name, COUNT(c.subject_name) AS attended_exams
+FROM Students AS a
+CROSS JOIN Subjects AS b
+LEFT JOIN Examinations AS c
+ON a.student_id = c.student_id
+AND b.subject_name = c.subject_name
+GROUP BY a.student_id, a.student_name, b.subject_name
+ORDER BY student_id, subject_name
