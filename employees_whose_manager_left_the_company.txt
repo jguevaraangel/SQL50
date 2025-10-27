@@ -1,0 +1,21 @@
+Table: Employees
+
++-------------+----------+
+| Column Name | Type     |
++-------------+----------+
+| employee_id | int      |
+| name        | varchar  |
+| manager_id  | int      |
+| salary      | int      |
++-------------+----------+
+In SQL, employee_id is the primary key for this table.
+This table contains information about the employees, their salary, and the ID of their manager. Some employees do not have a manager (manager_id is null). 
+Query:
+
+SELECT a.employee_id FROM Employees AS a
+LEFT JOIN Employees AS b
+ON a.manager_id = b.employee_id
+WHERE a.salary < 30000
+AND a.manager_id IS NOT NULL 
+AND b.employee_id IS NULL
+ORDER BY a.employee_id
