@@ -1,0 +1,32 @@
+Table: Sales
+
++-------------+-------+
+| Column Name | Type  |
++-------------+-------+
+| sale_id     | int   |
+| product_id  | int   |
+| year        | int   |
+| quantity    | int   |
+| price       | int   |
++-------------+-------+
+(sale_id, year) is the primary key (combination of columns with unique values) of this table.
+Each row records a sale of a product in a given year.
+A product may have multiple sales entries in the same year.
+Note that the per-unit price.
+
+Query:
+
+WITH first_year_match AS (
+    SELECT product_id, MIN(year) AS first_year FROM Sales
+    GROUP BY product_id
+)
+
+SELECT 
+s.product_id,
+fym.first_year,
+s.quantity,
+s.price
+FROM Sales AS s 
+JOIN first_year_match AS fym
+ON s.product_id = fym.product_id
+AND s.year = fym.first_year
