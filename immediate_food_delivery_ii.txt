@@ -1,0 +1,22 @@
+Table: Delivery
+
++-----------------------------+---------+
+| Column Name                 | Type    |
++-----------------------------+---------+
+| delivery_id                 | int     |
+| customer_id                 | int     |
+| order_date                  | date    |
+| customer_pref_delivery_date | date    |
++-----------------------------+---------+
+delivery_id is the column of unique values of this table.
+The table holds information about food delivery to customers that make orders at some date and specify a preferred delivery date (on the same order date or after it).
+
+Query:
+
+WITH first_order AS (SELECT customer_id, MIN(order_date) AS order_date FROM Delivery GROUP BY customer_id)
+
+SELECT ROUND(100*(SUM(de.order_date = de.customer_pref_delivery_date) / COUNT(de.customer_id)), 2)  AS immediate_percentage 
+FROM Delivery AS de 
+JOIN first_order
+ON de.customer_id = first_order.customer_id 
+AND de.order_date = first_order.order_date
