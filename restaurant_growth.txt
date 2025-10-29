@@ -1,0 +1,41 @@
+Table: Customer
+
++---------------+---------+
+| Column Name   | Type    |
++---------------+---------+
+| customer_id   | int     |
+| name          | varchar |
+| visited_on    | date    |
+| amount        | int     |
++---------------+---------+
+In SQL,(customer_id, visited_on) is the primary key for this table.
+This table contains data about customer transactions in a restaurant.
+visited_on is the date on which the customer with ID (customer_id) has visited the restaurant.
+amount is the total paid by a customer.
+
+Query:
+
+WITH DailyTotals AS (
+    SELECT
+    visited_on,
+    SUM(amount) AS amount
+    FROM Customer
+    GROUP BY visited_on
+),
+
+MovingAverages AS (
+    SELECT
+    visited_on,
+    SUM(amount) OVER (ROWS BETWEEN 6 PRECEDING AND CURRENT ROW) AS amount,
+    AVG(amount) OVER (ROWS BETWEEN 6 PRECEDING AND CURRENT ROW) AS average_amount,
+    COUNT(visited_on) OVER (ROWS BETWEEN 6 PRECEDING AND CURRENT ROW) AS days_in_window
+    FROM DailyTotals
+)
+
+SELECT
+visited_on,
+amount,
+ROUND(average_amount, 2) AS average_amount
+FROM MovingAverages
+WHERE days_in_window = 7
+ORDER BY visited_on
