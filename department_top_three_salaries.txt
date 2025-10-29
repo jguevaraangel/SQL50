@@ -1,0 +1,52 @@
+Table: Employee
+
++--------------+---------+
+| Column Name  | Type    |
++--------------+---------+
+| id           | int     |
+| name         | varchar |
+| salary       | int     |
+| departmentId | int     |
++--------------+---------+
+id is the primary key (column with unique values) for this table.
+departmentId is a foreign key (reference column) of the ID from the Department table.
+Each row of this table indicates the ID, name, and salary of an employee. It also contains the ID of their department.
+
+ 
+
+Table: Department
+
++-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| id          | int     |
+| name        | varchar |
++-------------+---------+
+id is the primary key (column with unique values) for this table.
+Each row of this table indicates the ID of a department and its name.
+
+Query:
+
+WITH RankedSalaries AS (
+    SELECT
+        e.name AS employee_name,
+        e.salary,
+        d.name AS department_name,
+        DENSE_RANK() OVER (
+            PARTITION BY d.id 
+            ORDER BY e.salary DESC
+        ) AS rnk
+    FROM
+        Employee AS e
+    JOIN
+        Department AS d ON e.departmentId = d.id
+)
+
+SELECT
+    department_name AS Department,
+    employee_name AS Employee,
+    salary AS Salary
+FROM
+    RankedSalaries
+WHERE
+    rnk <= 3;
